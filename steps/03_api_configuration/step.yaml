@@ -1,0 +1,56 @@
+name: api_configuration
+description: Configure API keys and model settings for LLM providers (OpenAI, Anthropic)
+version: 1.0.0
+dependencies: [01_environment_setup]
+
+inputs:
+  - type: file
+    path: inputs/api_config_template.yaml
+    description: Template for API configuration
+  - type: file
+    path: inputs/config_validator.py
+    description: API configuration validation script
+
+outputs:
+  - type: file
+    path: outputs/api_config.yaml
+    description: Validated API configuration for the pipeline
+  - type: file
+    path: outputs/config_validation.json
+    description: API configuration validation results
+  - type: file
+    path: outputs/model_capabilities.json
+    description: Detected model capabilities and limits
+
+environment:
+  python: ">=3.10"
+  packages:
+    - openai==1.54.3
+    - anthropic==0.39.0
+    - pyyaml==6.0.2
+
+resources:
+  cpu: 1
+  memory: 1Gi
+  timeout: 900  # 15 minutes
+
+security:
+  - "API keys are handled securely"
+  - "No API keys logged or exposed in outputs"
+  - "Configuration validation without API calls"
+
+supported_providers:
+  - name: "OpenAI"
+    models: ["gpt-4o-2024-05-13", "gpt-4-turbo", "gpt-3.5-turbo"]
+    required_env: ["OPENAI_API_KEY"]
+  - name: "Anthropic" 
+    models: ["claude-3-sonnet-20240229", "claude-3-haiku-20240307", "claude-3-opus-20240229"]
+    required_env: ["ANTHROPIC_API_KEY"]
+
+validation:
+  - check: "api_key_format"
+    description: "Validate API key format without making calls"
+  - check: "model_compatibility"
+    description: "Check model names against supported lists"
+  - check: "configuration_completeness"
+    description: "Ensure all required fields are present"

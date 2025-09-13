@@ -1,0 +1,53 @@
+name: rca_agent_execution
+description: Execute RCA-agent on datasets with iterative reasoning and telemetry analysis
+version: 1.0.0
+dependencies: [04_query_generation]
+
+inputs:
+  - type: directory
+    path: inputs/rca_agent/
+    description: RCA agent code modules (controller, executor, prompts)
+  - type: file
+    path: inputs/agent_runner.py
+    description: Pipeline-adapted RCA agent execution script
+
+outputs:
+  - type: directory
+    path: outputs/predictions/
+    description: RCA agent predictions for each dataset
+  - type: directory
+    path: outputs/trajectories/
+    description: Execution trajectories and reasoning steps
+  - type: directory
+    path: outputs/monitoring/
+    description: Execution monitoring and performance data
+  - type: file
+    path: outputs/execution_report.json
+    description: Detailed execution statistics and results
+
+environment:
+  python: ">=3.10"
+  packages:
+    - pandas==1.5.3
+    - ipython==8.17.2
+    - loguru==0.7.2
+    - openai==1.54.3
+    - anthropic==0.39.0
+
+resources:
+  cpu: 4
+  memory: 16Gi
+  timeout: 7200  # 2 hours
+
+execution_parameters:
+  controller_max_step: 25
+  controller_max_turn: 5
+  timeout_per_query: 600  # 10 minutes
+  sample_num: 1
+  parallel_execution: false
+
+datasets:
+  - "Telecom"
+  - "Bank" 
+  - "Market/cloudbed-1"
+  - "Market/cloudbed-2"

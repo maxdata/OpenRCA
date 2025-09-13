@@ -1,0 +1,38 @@
+name: environment_setup
+description: Setup Python environment and install all required dependencies for OpenRCA
+version: 1.0.0
+dependencies: []
+
+inputs:
+  - type: file
+    path: inputs/requirements.txt
+    description: Python dependencies list from original repository
+    
+outputs:
+  - type: file
+    path: outputs/environment_check.json
+    description: Environment validation results and installed package versions
+  - type: directory
+    path: outputs/logs/
+    description: Installation logs and error reports
+
+environment:
+  python: ">=3.10"
+  system_packages:
+    - git
+    - curl
+  
+resources:
+  cpu: 1
+  memory: 2Gi
+  timeout: 1800  # 30 minutes
+  
+validation:
+  - command: "python --version"
+    expected_pattern: "Python 3.1[0-9].*"
+  - command: "pip list | grep pandas"
+    expected_pattern: "pandas.*1.5.3"
+  - command: "pip list | grep openai"
+    expected_pattern: "openai.*1.54.3"
+  - command: "pip list | grep anthropic"
+    expected_pattern: "anthropic.*0.39.0"

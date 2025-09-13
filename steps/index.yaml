@@ -1,0 +1,83 @@
+name: openrca_pipeline
+version: 1.0.0
+description: Complete OpenRCA Root Cause Analysis Pipeline from Environment Setup to Evaluation
+repository: OpenRCA
+purpose: |
+  Convert the OpenRCA repository into a modular, reproducible pipeline for:
+  - Evaluating LLMs' root cause analysis capabilities
+  - Processing telemetry data (metrics, traces, logs) 
+  - Running RCA-agent and baseline models
+  - Generating comprehensive evaluation reports
+
+steps:
+  - id: 01_environment_setup
+    name: environment_setup
+    description: Setup Python environment and install dependencies
+    dependencies: []
+    
+  - id: 02_dataset_preparation
+    name: dataset_preparation
+    description: Download, validate, and prepare telemetry datasets
+    dependencies: [01_environment_setup]
+    
+  - id: 03_api_configuration
+    name: api_configuration
+    description: Configure API keys and model settings for LLM providers
+    dependencies: [01_environment_setup]
+    
+  - id: 04_query_generation
+    name: query_generation
+    description: Generate queries and task specifications from ground truth data
+    dependencies: [02_dataset_preparation, 03_api_configuration]
+    
+  - id: 05_rca_agent_execution
+    name: rca_agent_execution
+    description: Execute RCA-agent on datasets with iterative reasoning
+    dependencies: [04_query_generation]
+    
+  - id: 06_baseline_execution
+    name: baseline_execution
+    description: Run baseline models (direct LM, CoT LM, oracle KPIs)
+    dependencies: [04_query_generation]
+    
+  - id: 07_evaluation_reporting
+    name: evaluation_reporting
+    description: Evaluate predictions and generate comprehensive reports
+    dependencies: [05_rca_agent_execution, 06_baseline_execution]
+    
+  - id: 08_performance_analysis
+    name: performance_analysis
+    description: Analyze performance across difficulty levels and generate insights
+    dependencies: [07_evaluation_reporting]
+
+execution:
+  parallel: true
+  max_workers: 4
+  on_failure: stop
+  timeout: 7200  # 2 hours
+  
+requirements:
+  min_storage: "80GB"
+  min_memory: "32GB"
+  python_version: ">=3.10"
+  
+datasets:
+  - name: "Telecom"
+    description: "Telecom system telemetry data"
+  - name: "Bank" 
+    description: "Banking platform telemetry data"
+  - name: "Market/cloudbed-1"
+    description: "Market system cloudbed service group 1"
+  - name: "Market/cloudbed-2"
+    description: "Market system cloudbed service group 2"
+
+models:
+  - provider: "OpenAI"
+    default_model: "gpt-4o-2024-05-13"
+  - provider: "Anthropic"
+    default_model: "claude-3-sonnet-20240229"
+
+outputs:
+  - evaluation_reports: "test/results/"
+  - monitoring_data: "test/monitor/"
+  - trajectory_notebooks: "test/monitor/{dataset}/agent-{tag}-{model}/"

@@ -1,0 +1,35 @@
+name: evaluation_reporting
+description: Evaluate predictions and generate comprehensive reports with accuracy metrics
+version: 1.0.0
+dependencies: [05_rca_agent_execution, 06_baseline_execution]
+
+inputs:
+  - type: file
+    path: inputs/evaluator.py
+    description: Evaluation script based on main/evaluate.py
+    
+outputs:
+  - type: directory
+    path: outputs/evaluation_results/
+    description: Detailed evaluation results for all models
+  - type: file
+    path: outputs/comparison_report.json
+    description: Model comparison and performance analysis
+  - type: file
+    path: outputs/accuracy_summary.json
+    description: Accuracy metrics across difficulty levels
+
+environment:
+  python: ">=3.10"
+  packages:
+    - pandas==1.5.3
+
+resources:
+  cpu: 2
+  memory: 4Gi
+  timeout: 1800
+
+evaluation_metrics:
+  - accuracy: "Exact match accuracy"
+  - partial_credit: "Partial credit scoring"
+  - difficulty_breakdown: "Performance by task difficulty"

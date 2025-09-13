@@ -1,0 +1,61 @@
+name: dataset_preparation
+description: Download, validate, and prepare telemetry datasets for OpenRCA analysis
+version: 1.0.0
+dependencies: [01_environment_setup]
+
+inputs:
+  - type: file
+    path: inputs/dataset_sources.json
+    description: Dataset download URLs and checksums
+  - type: file  
+    path: inputs/schema_validation.py
+    description: Data schema validation script
+
+outputs:
+  - type: directory
+    path: outputs/dataset/
+    description: Validated telemetry datasets organized by system
+    schema: outputs/dataset_schema.json
+  - type: file
+    path: outputs/validation_report.json
+    description: Dataset validation results and statistics
+  - type: file
+    path: outputs/dataset_inventory.json
+    description: Complete inventory of available datasets
+
+environment:
+  python: ">=3.10"
+  packages:
+    - pandas==1.5.3
+    - pytz==2022.7
+    - requests
+    
+resources:
+  cpu: 2
+  memory: 8Gi
+  storage: 80Gi
+  timeout: 3600  # 1 hour
+
+datasets:
+  - name: "Telecom"
+    size_gb: 15
+    structure: "query.csv, record.csv, telemetry/{YYYY_MM_DD}/{metric,trace,log}/"
+  - name: "Bank"
+    size_gb: 20  
+    structure: "query.csv, record.csv, telemetry/{YYYY_MM_DD}/{metric,trace,log}/"
+  - name: "Market/cloudbed-1"
+    size_gb: 18
+    structure: "query.csv, record.csv, telemetry/{YYYY_MM_DD}/{metric,trace,log}/"
+  - name: "Market/cloudbed-2"
+    size_gb: 22
+    structure: "query.csv, record.csv, telemetry/{YYYY_MM_DD}/{metric,trace,log}/"
+
+validation:
+  - check: "directory_structure"
+    description: "Verify expected directory structure exists"
+  - check: "file_formats"
+    description: "Validate CSV files and schemas"
+  - check: "data_integrity"
+    description: "Check data completeness and consistency"
+  - check: "timestamp_ranges"
+    description: "Validate timestamp ranges and timezone consistency"

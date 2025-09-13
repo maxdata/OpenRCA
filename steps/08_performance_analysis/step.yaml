@@ -1,0 +1,35 @@
+name: performance_analysis  
+description: Analyze performance across difficulty levels and generate insights
+version: 1.0.0
+dependencies: [07_evaluation_reporting]
+
+inputs:
+  - type: file
+    path: inputs/performance_analyzer.py
+    description: Performance analysis and visualization script
+    
+outputs:
+  - type: file
+    path: outputs/performance_insights.json
+    description: Detailed performance analysis and insights
+  - type: file
+    path: outputs/model_comparison.json
+    description: Comprehensive model comparison results
+  - type: directory
+    path: outputs/analysis_reports/
+    description: Detailed analysis reports
+
+environment:
+  python: ">=3.10"
+  packages:
+    - pandas==1.5.3
+
+resources:
+  cpu: 1
+  memory: 2Gi
+  timeout: 900
+
+analysis_dimensions:
+  - difficulty_analysis: "Easy vs Medium vs Hard task performance"
+  - model_comparison: "RCA-agent vs baseline models"
+  - failure_patterns: "Common failure modes and patterns"

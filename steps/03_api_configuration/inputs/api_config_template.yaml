@@ -1,0 +1,61 @@
+# OpenRCA API Configuration Template
+# Copy this file and fill in your API credentials
+
+# Primary LLM Provider Configuration
+SOURCE: "OpenAI"  # Options: "OpenAI", "Anthropic"
+MODEL: "gpt-4o-2024-05-13"  # Model to use for RCA agent and baselines
+API_KEY: "${OPENAI_API_KEY}"  # Environment variable or direct key
+API_BASE: ""  # Optional: Custom API base URL
+
+# Alternative Provider Configuration (for comparison)
+ALTERNATIVE_PROVIDER:
+  SOURCE: "Anthropic"
+  MODEL: "claude-3-sonnet-20240229"
+  API_KEY: "${ANTHROPIC_API_KEY}"
+  API_BASE: ""
+
+# Model-specific parameters
+MODEL_PARAMETERS:
+  temperature: 0.7
+  max_tokens: 4096
+  timeout: 60
+  retry_attempts: 3
+  retry_delay: 1
+
+# Rate limiting configuration
+RATE_LIMITS:
+  requests_per_minute: 60
+  tokens_per_minute: 40000
+  concurrent_requests: 5
+
+# Logging and monitoring
+LOGGING:
+  log_requests: true
+  log_responses: false  # Don't log full responses for privacy
+  log_level: "INFO"
+
+# Cost tracking (optional)
+COST_TRACKING:
+  enabled: false
+  max_cost_per_run: 10.0  # USD
+  alert_threshold: 8.0
+
+# Model capabilities (automatically detected)
+CAPABILITIES:
+  context_length: 128000
+  supports_function_calling: true
+  supports_vision: false
+  input_cost_per_1k_tokens: 0.0025
+  output_cost_per_1k_tokens: 0.01
+
+# Environment variable mapping
+ENVIRONMENT_VARIABLES:
+  OPENAI_API_KEY: "Your OpenAI API key"
+  ANTHROPIC_API_KEY: "Your Anthropic API key"
+  
+# Configuration validation rules
+VALIDATION:
+  require_api_key: true
+  require_model: true
+  validate_model_name: true
+  check_rate_limits: true

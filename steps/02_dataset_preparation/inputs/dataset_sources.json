@@ -1,0 +1,57 @@
+{
+  "google_drive": {
+    "base_url": "https://drive.google.com/drive/folders/1wGiEnu4OkWrjPxfx5ZTROnU37-5UDoPM",
+    "download_instructions": "Manual download required - automated download not supported for Google Drive",
+    "note": "Users must manually download from Google Drive and place in dataset/ directory"
+  },
+  "expected_structure": {
+    "Telecom": {
+      "files": ["query.csv", "record.csv"],
+      "telemetry_dates": ["2021_03_05", "2021_03_06", "2021_03_07"],
+      "telemetry_types": ["metric", "trace", "log"]
+    },
+    "Bank": {
+      "files": ["query.csv", "record.csv"], 
+      "telemetry_dates": ["2021_03_05", "2021_03_06", "2021_03_07"],
+      "telemetry_types": ["metric", "trace", "log"]
+    },
+    "Market": {
+      "cloudbed-1": {
+        "files": ["query.csv", "record.csv"],
+        "telemetry_dates": ["2021_03_05", "2021_03_06", "2021_03_07"],
+        "telemetry_types": ["metric", "trace", "log"]
+      },
+      "cloudbed-2": {
+        "files": ["query.csv", "record.csv"],
+        "telemetry_dates": ["2021_03_05", "2021_03_06", "2021_03_07"], 
+        "telemetry_types": ["metric", "trace", "log"]
+      }
+    }
+  },
+  "file_schemas": {
+    "query.csv": {
+      "columns": ["task_index", "instruction", "scoring_points"],
+      "required": true
+    },
+    "record.csv": {
+      "columns": ["timestamp", "component", "reason", "description"],
+      "required": true
+    },
+    "metric_app.csv": {
+      "columns": ["timestamp", "rr", "sr", "cnt", "mrt", "tc"],
+      "required": false
+    },
+    "metric_container.csv": {
+      "columns": ["timestamp", "cmdb_id", "kpi_name", "value"],
+      "required": true
+    },
+    "trace_span.csv": {
+      "columns": ["timestamp", "cmdb_id", "parent_id", "span_id", "trace_id", "duration"],
+      "required": true
+    },
+    "log_service.csv": {
+      "columns": ["log_id", "timestamp", "cmdb_id", "log_name", "value"],
+      "required": true
+    }
+  }
+}

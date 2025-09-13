@@ -1,0 +1,34 @@
+name: baseline_execution
+description: Run baseline models (direct LM, CoT LM, oracle KPIs) for comparison with RCA agent
+version: 1.0.0
+dependencies: [04_query_generation]
+
+inputs:
+  - type: directory
+    path: inputs/baseline_models/
+    description: Baseline model implementations
+    
+outputs:
+  - type: directory
+    path: outputs/baseline_predictions/
+    description: Baseline model predictions for each dataset
+  - type: file
+    path: outputs/baseline_report.json
+    description: Baseline execution results and statistics
+
+environment:
+  python: ">=3.10"
+  packages:
+    - pandas==1.5.3
+    - openai==1.54.3
+    - anthropic==0.39.0
+
+resources:
+  cpu: 2
+  memory: 8Gi
+  timeout: 3600
+
+baseline_models:
+  - direct_lm: "Direct language model prompting"
+  - cot_lm: "Chain-of-thought language model"
+  - oracle_kpis: "Oracle with perfect KPI knowledge"

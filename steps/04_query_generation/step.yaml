@@ -1,0 +1,65 @@
+name: query_generation
+description: Generate queries and task specifications from ground truth data for OpenRCA evaluation
+version: 1.0.0
+dependencies: [02_dataset_preparation, 03_api_configuration]
+
+inputs:
+  - type: file
+    path: inputs/task_specification.json
+    description: Task specification templates and scoring criteria
+  - type: file
+    path: inputs/prompt_templates.py
+    description: LLM prompt templates for query generation
+  - type: file
+    path: inputs/query_generator.py
+    description: Main query generation script
+
+outputs:
+  - type: directory
+    path: outputs/queries/
+    description: Generated query files for each dataset
+    schema: outputs/query_schema.json
+  - type: file
+    path: outputs/generation_report.json
+    description: Query generation statistics and validation results
+  - type: file
+    path: outputs/task_distribution.json
+    description: Distribution of generated tasks across difficulty levels
+
+environment:
+  python: ">=3.10"
+  packages:
+    - pandas==1.5.3
+    - pytz==2022.7
+    - openai==1.54.3
+    - anthropic==0.39.0
+    - pyyaml==6.0.2
+
+resources:
+  cpu: 2
+  memory: 4Gi
+  timeout: 2400  # 40 minutes
+
+task_types:
+  - task_1: "Time prediction only"
+  - task_2: "Reason prediction only" 
+  - task_3: "Component prediction only"
+  - task_4: "Time + Reason prediction"
+  - task_5: "Time + Component prediction"
+  - task_6: "Component + Reason prediction"
+  - task_7: "Full prediction (Time + Component + Reason)"
+
+difficulty_levels:
+  easy: "tasks 1-3 (single element prediction)"
+  medium: "tasks 4-6 (two element prediction)"
+  hard: "task 7 (full prediction)"
+
+validation:
+  - check: "query_format"
+    description: "Validate generated query format and structure"
+  - check: "task_distribution"
+    description: "Ensure balanced distribution across task types"
+  - check: "scoring_alignment"
+    description: "Verify scoring points match generated queries"
+  - check: "timezone_consistency"
+    description: "Validate timezone handling (UTC+8)"

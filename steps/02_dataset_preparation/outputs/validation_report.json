@@ -1,0 +1,6 @@
+{
+  "validation_status": "datasets_not_found",
+  "message": "Datasets need to be manually downloaded from Google Drive",
+  "download_url": "https://drive.google.com/drive/folders/1wGiEnu4OkWrjPxfx5ZTROnU37-5UDoPM",
+  "required_action": "Download datasets and place in dataset/ directory"
+}
